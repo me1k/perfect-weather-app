@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { fetchWeatherApi } from 'openmeteo';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const POST = async (req: NextRequest, res: NextResponse) => {
   try {
     const params = {
