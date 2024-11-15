@@ -1,8 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import WeatherCard from './WeatherCard';
-import LocationWeatherCard from './LocationWeatherCard';
+import HourlyForecast from './HourlyForecast';
 
 const POPULAR_CITIES = [
   { name: 'Berlin', lat: 52.52, lon: 13.405 },
@@ -12,10 +11,32 @@ const POPULAR_CITIES = [
   { name: 'Kiel', lat: 54.3213, lon: 10.1349 },
   { name: 'Frankfurt am Main', lat: 50.1109, lon: 8.6821 },
 ];
+const weatherCodeToIcon: { [key: number]: string } = {
+  0: '01d',
+  1: '02d',
+  2: '03d',
+  3: '04d',
+  45: '50d',
+  48: '50d',
+  51: '09d',
+  53: '09d',
+  55: '09d',
+  61: '10d',
+  63: '10d',
+  65: '10d',
+  71: '13d',
+  73: '13d',
+  75: '13d',
+  80: '09d',
+  81: '09d',
+  82: '09d',
+  95: '11d',
+  96: '11d',
+  99: '11d',
+};
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
-  // const [suggestions, setSuggestions] = useState<any[]>([]);
   const [popularCitiesWeather, setPopularCitiesWeather] = useState<
     { name: string; weatherCode: number; temperature: number }[]
   >([]);
@@ -23,16 +44,17 @@ export default function Home() {
 
   const fetchPopularCitiesWeather = async () => {
     try {
-      const promises = POPULAR_CITIES.map((city) =>
-        fetch('/api/currentWeather', {
-          method: 'POST',
-          body: JSON.stringify({ longitude: city.lon, latitude: city.lat }),
-        }).then((response) => {
-          if (!response.ok) {
-            throw new Error(`Error fetching data for ${city.name}`);
-          }
-          return response.json();
-        })
+      const promises = POPULAR_CITIES.map(
+        async (city) =>
+          await fetch('/api/currentWeather', {
+            method: 'POST',
+            body: JSON.stringify({ longitude: city.lon, latitude: city.lat }),
+          }).then((response) => {
+            if (!response.ok) {
+              throw new Error(`Error fetching data for ${city.name}`);
+            }
+            return response.json();
+          })
       );
 
       const results = await Promise.all(promises);
@@ -71,9 +93,29 @@ export default function Home() {
           <button
             onClick={() => setDarkMode(!darkMode)}
             className="px-4 py-2 bg-blue-500 dark:bg-yellow-500 text-white dark:text-gray-800 rounded">
-            {false ? 'Light Mode' : 'Dark Mode'}
+            {darkMode ? 'Light Mode' : 'Dark Mode'}
           </button>
         </header>
+
+        {/* Popular Cities Tags */}
+        <div className="flex flex-wrap gap-2 mb-4">
+          {popularCitiesWeather.map((city, index) => {
+            const iconCode = weatherCodeToIcon[city.weatherCode] || '01d'; // Default to clear sky
+            const iconUrl = `http://openweathermap.org/img/wn/${iconCode}@2x.png`;
+
+            return (
+              <div
+                key={index}
+                className="pr-3 rounded-full bg-gray-300 dark:bg-gray-600 text-sm font-medium text-gray-800 dark:text-gray-100 hover:bg-gray-400 dark:hover:bg-gray-500 flex items-center gap-2">
+                <img src={iconUrl} alt="Weather Icon" className="w-10 h-10" />
+                <span>{city.name}</span>
+                <span className="text-xs font-bold text-gray-800 dark:text-gray-300">
+                  {city.temperature}°C
+                </span>
+              </div>
+            );
+          })}
+        </div>
 
         {/* Search Input */}
         <div className="mb-6">
@@ -84,64 +126,39 @@ export default function Home() {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded"
           />
-          {/* {suggestions.length > 0 && (
-            <ul className="bg-white dark:bg-gray-700 mt-2 p-3 rounded shadow">
-              {suggestions.map((city, index) => (
-                <li key={index} className="p-2">
-                  {city.display_name}
-                </li>
-              ))}
-            </ul>
-          )} */}
         </div>
 
-        {/* Popular Cities */}
+        {/* Today Weather Section */}
         <section className="mb-6">
-          <h2 className="text-xl font-semibold mb-4">Popular Cities</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {popularCitiesWeather.map((city, index) => (
-              <WeatherCard
-                weatherCode={city.weatherCode}
-                cityName={city.name}
-                temperature={city.temperature}
-                key={index}
-              />
-            ))}
-            <LocationWeatherCard />
+          {/* Hourly Weather Forecast */}
+          <div className="flex flex-wrap gap-4 w-full">
+            <HourlyForecast />
           </div>
         </section>
 
         {/* Weather Map */}
         <section className="mb-6">
           <h2 className="text-xl font-semibold mb-4">Weather Map</h2>
-          {/* <MapContainer center={[51.1657, 10.4515]} zoom={6} className="h-80">
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            />
-            <Marker position={[52.52, 13.405]}>
-              <Popup>Berlin: Simulated 15-min forecast</Popup>
-            </Marker>
-          </MapContainer> */}
+          {/* Map implementation */}
         </section>
 
         {/* Forecast Tags */}
         <section>
           <div className="flex gap-4">
-            {['today', '7-day', '14-day'].map((type) => (
+            {/* {['today', '7-day', '14-day'].map((type) => (
               <button
                 key={type}
-                //onClick={() => setForecastType(type)}
+                onClick={() => setForecastType(type)}
                 className={`px-4 py-2 rounded ${
-                  false
+                  forecastType === type
                     ? 'bg-blue-500 dark:bg-yellow-500 text-white'
                     : 'bg-gray-300 dark:bg-gray-600'
                 }`}>
                 {type}
               </button>
-            ))}
+            ))} */}
           </div>
-          <p className="mt-4">Current forecast type: {'forecastType'}</p>
+          {/* <p className="mt-4">Current forecast type: {forecastType}</p> */}
         </section>
       </div>
     </div>
