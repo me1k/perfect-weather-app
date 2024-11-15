@@ -1,18 +1,22 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { fetchWeatherApi } from 'openmeteo';
 
-export const POST = async () => {
+export const POST = async (req: NextRequest) => {
+  const body = await req.json();
+  console.log({ body });
   try {
     const params = {
-      latitude: 52.520007,
-      longitude: 13.404954,
+      latitude: body.latitude,
+      longitude: body.longitude,
       current: [
         'temperature_2m',
         'apparent_temperature',
         'is_day',
         'precipitation',
         'rain',
+        'weather_code',
       ],
+      timezone: 'Europe/Berlin',
       forecast_days: 1,
       models: 'icon_seamless',
     };
@@ -33,12 +37,13 @@ export const POST = async () => {
         isDay: current?.variables(2)!.value(),
         precipitation: current?.variables(3)!.value(),
         rain: current?.variables(4)!.value(),
+        weatherCode: current?.variables(5)!.value(),
         latitude,
         longitude,
       },
     };
 
-    return NextResponse.json({ weatherData });
+    return NextResponse.json(weatherData);
   } catch (error) {
     throw new Error(JSON.stringify(error));
   }
