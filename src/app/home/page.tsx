@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { useEffect, useState } from 'react';
 import { POPULAR_CITIES } from '../utils';
@@ -26,8 +26,12 @@ export const fetchparams = {
   models: 'icon_seamless',
 };
 
- // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const fetchWeatherData = async (city: any) => {
+
+export const fetchWeatherData = async (city: {
+  name?: string;
+  lat: number | undefined;
+  lon: number | undefined;
+}) => {
   try {
     const response = await fetch('/api/currentWeather', {
       method: 'POST',
@@ -50,33 +54,22 @@ export const fetchWeatherData = async (city: any) => {
   }
 };
 
-const Home = () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [data, setData] = useState<any>([]);
+const Home = async () => {
+  const promises = POPULAR_CITIES.map(async (city) => {
+    const response = await fetchWeatherData(city);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const promises = POPULAR_CITIES.map(async (city) => {
-        const response = await fetchWeatherData(city);
-        console.log({ response });
-        return {
-          name: city.name,
-          temperature: response.current.temperature2m,
-          weatherCode: response.current.weatherCode,
-          lat: city.lat,
-          lon: city.lon,
-        };
-      });
-
-      const results = await Promise.all(promises);
-
-      setData(results);
+    return {
+      name: city.name,
+      temperature: response.current.temperature2m,
+      weatherCode: response.current.weatherCode,
+      lat: city.lat,
+      lon: city.lon,
     };
-    fetchData();
-  }, []);
+  });
 
+  const results = await Promise.all(promises);
   // Ensure the fetched data is passed to the client component
-  return <ClientComponent data={data} />;
+  return <ClientComponent data={results} />;
 };
 
 export default Home;
