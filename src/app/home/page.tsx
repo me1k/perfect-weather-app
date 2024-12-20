@@ -26,6 +26,7 @@ export const fetchparams = {
   models: 'icon_seamless',
 };
 
+ // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const fetchWeatherData = async (city: any) => {
   try {
     const response = await fetch('/api/currentWeather', {

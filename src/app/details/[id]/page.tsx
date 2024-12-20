@@ -7,7 +7,9 @@ import { useEffect, useState } from 'react';
 
 const WeatherDetailPage = () => {
   const { id } = useParams();
+   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [weatherData, setWeatherData] = useState<any>();
+   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [hourlyForecast, setHourlyForecast] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
