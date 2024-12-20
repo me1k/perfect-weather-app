@@ -1,5 +1,3 @@
-'use client';
-
 import { POPULAR_CITIES } from '../utils';
 import ClientComponent from './ClientComponent';
 
