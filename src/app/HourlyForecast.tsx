@@ -1,27 +1,7 @@
 import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
-
-const POPULAR_CITIES = [
-  { name: 'Berlin', lat: 52.52, lon: 13.405 },
-  { name: 'Hamburg', lat: 53.5511, lon: 9.9937 },
-  { name: 'Munich', lat: 48.1351, lon: 11.582 },
-  { name: 'Leipzig', lat: 51.3397, lon: 12.3731 },
-  { name: 'Kiel', lat: 54.3213, lon: 10.1349 },
-  { name: 'Frankfurt am Main', lat: 50.1109, lon: 8.6821 },
-];
-
-const weatherCodeToIcon: { [key: number]: string } = {
-  0: '01d', // Clear sky
-  1: '02d', // Mainly clear
-  2: '03d', // Partly cloudy
-  3: '04d', // Overcast
-  45: '50d', // Fog
-  48: '50d', // Depositing rime fog
-  51: '09d', // Drizzle: Light intensity
-  61: '10d', // Rain: Slight
-  80: '09d', // Rain showers: Slight
-  95: '11d', // Thunderstorm: Moderate
-};
+import { POPULAR_CITIES, weatherCodeToIcon } from './utils';
+import { fetchparams } from './home/page';
 
 const HourlyForecast = () => {
   const [hourlyForecast, setHourlyForecast] = useState<
@@ -53,7 +33,7 @@ const HourlyForecast = () => {
 
         const data = await response.json();
         const hourlyData = data.hourly;
-        console.log({ hourlyData });
+        
         const now = new Date();
         const nextSixHours = hourlyData.time
           .map((time: string, index: number) => ({
@@ -88,7 +68,7 @@ const HourlyForecast = () => {
       try {
         const response = await fetch('/api/currentWeather', {
           method: 'POST',
-          body: JSON.stringify({ longitude: city.lon, latitude: city.lat }),
+          body: JSON.stringify({ longitude: city.lon, latitude: city.lat, fetchParams: fetchparams }),
         });
 
         if (!response.ok) {
@@ -97,7 +77,7 @@ const HourlyForecast = () => {
 
         const data = await response.json();
         const weatherData = data;
-        console.log({ weatherData });
+        console.log({weatherData})
         setCurrentWeatherData(weatherData.current);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred');
@@ -109,7 +89,7 @@ const HourlyForecast = () => {
     fetchHourlyForecast();
     fetchCurrentWeather();
   }, []);
-
+  
   if (loading) {
     return <p>Loading hourly forecast...</p>;
   }
@@ -136,6 +116,8 @@ const HourlyForecast = () => {
             }@2x.png`}
             alt="Weather Icon"
             className="w-10 h-10"
+            width={100}
+            height={100}
           />
           <p className="text-lg font-bold">
             {Math.round(weatherData?.temperature2m)}°C
@@ -152,6 +134,8 @@ const HourlyForecast = () => {
               src={`http://openweathermap.org/img/wn/${hour.icon}@2x.png`}
               alt="Weather Icon"
               className="w-10 h-10"
+              width={100}
+              height={100}
             />
             <p className="text-lg font-bold">{hour.temperature}°C</p>
           </div>
