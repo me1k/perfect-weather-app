@@ -1,3 +1,5 @@
+'use client'
+
 import { useEffect, useState } from 'react';
 import { POPULAR_CITIES } from '../utils';
 import ClientComponent from './ClientComponent';
