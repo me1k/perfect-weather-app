@@ -7,9 +7,9 @@ import { useEffect, useState } from 'react';
 
 const WeatherDetailPage = () => {
   const { id } = useParams();
-   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [weatherData, setWeatherData] = useState<any>();
-   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [hourlyForecast, setHourlyForecast] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -75,24 +75,6 @@ const WeatherDetailPage = () => {
       }
     };
 
-    const fetch16DayForecast = async () => {
-      try {
-        const response = await fetch('/api/weather-16-days', {
-          method: 'POST',
-          body: JSON.stringify({ longitude: city?.lon, latitude: city?.lat }),
-        });
-        const data = await response.json();
-        console.log({ data });
-
-        const weatherCodes = Object.values<string>(data.hourly.weatherCode).map(
-          (weatherCode) => weatherCode
-        );
-       
-      } catch (err) {
-        console.log({ err });
-      }
-    };
-    fetch16DayForecast();
     fetchHourlyForecast();
   }, [city?.lat, city?.lon]);
 

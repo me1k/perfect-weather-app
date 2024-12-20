@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { POPULAR_CITIES } from '../utils';
 import ClientComponent from './ClientComponent';
 
@@ -68,7 +67,7 @@ const Home = async () => {
   });
 
   const results = await Promise.all(promises);
-  // Ensure the fetched data is passed to the client component
+
   return <ClientComponent data={results} />;
 };
 
