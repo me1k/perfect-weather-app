@@ -23,35 +23,34 @@ const fetchparams = {
   models: 'icon_seamless',
 };
 
-
-const fetchWeatherData = async (city: {
-  name?: string;
-  lat: number | undefined;
-  lon: number | undefined;
-}) => {
-  try {
-    const response = await fetch('/api/currentWeather', {
-      method: 'POST',
-      body: JSON.stringify({
-        longitude: city.lon,
-        latitude: city.lat,
-        fetchParams: fetchparams,
-      }),
-      headers: { 'Content-Type': 'application/json' },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Error fetching data for ${city.name}`);
-    }
-
-    return response.json();
-  } catch (error) {
-    console.error("Error fetching popular cities' weather:", error);
-    return [];
-  }
-};
-
 const Home = async () => {
+  const fetchWeatherData = async (city: {
+    name?: string;
+    lat: number | undefined;
+    lon: number | undefined;
+  }) => {
+    try {
+      const response = await fetch('/api/currentWeather', {
+        method: 'POST',
+        body: JSON.stringify({
+          longitude: city.lon,
+          latitude: city.lat,
+          fetchParams: fetchparams,
+        }),
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error fetching data for ${city.name}`);
+      }
+
+      return response.json();
+    } catch (error) {
+      console.error("Error fetching popular cities' weather:", error);
+      return [];
+    }
+  };
+
   const promises = POPULAR_CITIES.map(async (city) => {
     const response = await fetchWeatherData(city);
 

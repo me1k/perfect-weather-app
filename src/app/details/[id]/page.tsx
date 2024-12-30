@@ -27,33 +27,6 @@ const fetchparams = {
   models: 'icon_seamless',
 };
 
-const fetchWeatherData = async (city: {
-  name?: string;
-  lat: number | undefined;
-  lon: number | undefined;
-}) => {
-  try {
-    const response = await fetch('/api/currentWeather', {
-      method: 'POST',
-      body: JSON.stringify({
-        longitude: city.lon,
-        latitude: city.lat,
-        fetchParams: fetchparams,
-      }),
-      headers: { 'Content-Type': 'application/json' },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Error fetching data for ${city.name}`);
-    }
-
-    return response.json();
-  } catch (error) {
-    console.error("Error fetching popular cities' weather:", error);
-    return [];
-  }
-};
-
 const WeatherDetailPage = () => {
   const { id } = useParams();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -66,6 +39,33 @@ const WeatherDetailPage = () => {
   const iconCode = weatherCodeToIcon[weatherData?.weatherCode] || '01d';
   const iconUrl = `http://openweathermap.org/img/wn/${iconCode}@2x.png`;
   const city = POPULAR_CITIES.find((city) => city.name === id);
+
+  const fetchWeatherData = async (city: {
+    name?: string;
+    lat: number | undefined;
+    lon: number | undefined;
+  }) => {
+    try {
+      const response = await fetch('/api/currentWeather', {
+        method: 'POST',
+        body: JSON.stringify({
+          longitude: city.lon,
+          latitude: city.lat,
+          fetchParams: fetchparams,
+        }),
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error fetching data for ${city.name}`);
+      }
+
+      return response.json();
+    } catch (error) {
+      console.error("Error fetching popular cities' weather:", error);
+      return [];
+    }
+  };
 
   useEffect(() => {
     const getData = async () => {
