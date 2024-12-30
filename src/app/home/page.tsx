@@ -1,7 +1,7 @@
 import { POPULAR_CITIES } from '../utils';
 import ClientComponent from './ClientComponent';
 
-export const fetchparams = {
+const fetchparams = {
   current: [
     'temperature_2m',
     'relative_humidity_2m',

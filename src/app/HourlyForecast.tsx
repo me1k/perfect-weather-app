@@ -1,8 +1,28 @@
 import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
 import { POPULAR_CITIES, weatherCodeToIcon } from './utils';
-import { fetchparams } from './home/page';
 
+const fetchparams = {
+  current: [
+    'temperature_2m',
+    'relative_humidity_2m',
+    'apparent_temperature',
+    'is_day',
+    'precipitation',
+    'rain',
+    'showers',
+    'weather_code',
+    'cloud_cover',
+    'pressure_msl',
+    'surface_pressure',
+    'wind_speed_10m',
+    'wind_direction_10m',
+    'wind_gusts_10m',
+  ],
+  timezone: 'Europe/Berlin',
+  forecast_days: 1,
+  models: 'icon_seamless',
+};
 const HourlyForecast = () => {
   const [hourlyForecast, setHourlyForecast] = useState<
     { time: string; temperature: number; icon: string }[]
@@ -33,7 +53,7 @@ const HourlyForecast = () => {
 
         const data = await response.json();
         const hourlyData = data.hourly;
-        
+
         const now = new Date();
         const nextSixHours = hourlyData.time
           .map((time: string, index: number) => ({
@@ -68,7 +88,11 @@ const HourlyForecast = () => {
       try {
         const response = await fetch('/api/currentWeather', {
           method: 'POST',
-          body: JSON.stringify({ longitude: city.lon, latitude: city.lat, fetchParams: fetchparams }),
+          body: JSON.stringify({
+            longitude: city.lon,
+            latitude: city.lat,
+            fetchParams: fetchparams,
+          }),
         });
 
         if (!response.ok) {
@@ -77,7 +101,7 @@ const HourlyForecast = () => {
 
         const data = await response.json();
         const weatherData = data;
-        console.log({weatherData})
+        console.log({ weatherData });
         setCurrentWeatherData(weatherData.current);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred');
@@ -89,7 +113,7 @@ const HourlyForecast = () => {
     fetchHourlyForecast();
     fetchCurrentWeather();
   }, []);
-  
+
   if (loading) {
     return <p>Loading hourly forecast...</p>;
   }
