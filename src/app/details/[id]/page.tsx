@@ -1,9 +1,58 @@
 'use client';
-import { fetchWeatherData } from '@/app/home/page';
+
 import { POPULAR_CITIES, weatherCodeToIcon } from '@/app/utils';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+
+const fetchparams = {
+  current: [
+    'temperature_2m',
+    'relative_humidity_2m',
+    'apparent_temperature',
+    'is_day',
+    'precipitation',
+    'rain',
+    'showers',
+    'weather_code',
+    'cloud_cover',
+    'pressure_msl',
+    'surface_pressure',
+    'wind_speed_10m',
+    'wind_direction_10m',
+    'wind_gusts_10m',
+  ],
+  timezone: 'Europe/Berlin',
+  forecast_days: 1,
+  models: 'icon_seamless',
+};
+
+const fetchWeatherData = async (city: {
+  name?: string;
+  lat: number | undefined;
+  lon: number | undefined;
+}) => {
+  try {
+    const response = await fetch('/api/currentWeather', {
+      method: 'POST',
+      body: JSON.stringify({
+        longitude: city.lon,
+        latitude: city.lat,
+        fetchParams: fetchparams,
+      }),
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error fetching data for ${city.name}`);
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error("Error fetching popular cities' weather:", error);
+    return [];
+  }
+};
 
 const WeatherDetailPage = () => {
   const { id } = useParams();

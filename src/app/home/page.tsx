@@ -24,7 +24,7 @@ const fetchparams = {
 };
 
 
-export const fetchWeatherData = async (city: {
+const fetchWeatherData = async (city: {
   name?: string;
   lat: number | undefined;
   lon: number | undefined;
