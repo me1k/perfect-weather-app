@@ -21,13 +21,13 @@ export const POST = async (req: NextRequest) => {
       const weatherData = {
         current: {
           time: new Date(Number(current?.time()) * 1000),
-          temperature2m: current?.variables(0)?.value(),
+          temperature2m: current?.variables(0)!.value(),
           relativeHumidity2m: current?.variables(1)!.value(),
-          apparentTemperature: current?.variables(2)?.value(),
-          isDay: current?.variables(2)?.value(),
-          precipitation: current?.variables(3)?.value(),
-          rain: current?.variables(4)?.value(),
-          weatherCode: current?.variables(7)?.value(),
+          apparentTemperature: current?.variables(2)!.value(),
+          isDay: current?.variables(2)!.value(),
+          precipitation: current?.variables(3)!.value(),
+          rain: current?.variables(4)!.value(),
+          weatherCode: current?.variables(7)!.value(),
           showers: current?.variables(6)!.value(),
           cloudCover: current?.variables(8)!.value(),
           pressureMsl: current?.variables(9)!.value(),
@@ -45,6 +45,7 @@ export const POST = async (req: NextRequest) => {
       return NextResponse.json('No fetch params available');
     }
   } catch (error) {
+    return
     throw new Error(JSON.stringify(error));
   }
 };

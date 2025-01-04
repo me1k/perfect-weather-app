@@ -1,7 +1,7 @@
 import { POPULAR_CITIES } from '../utils';
 import ClientComponent from './ClientComponent';
 
-const fetchparams = {
+const fetchParams = {
   current: [
     'temperature_2m',
     'relative_humidity_2m',
@@ -23,34 +23,37 @@ const fetchparams = {
   models: 'icon_seamless',
 };
 
+const fetchWeatherData = async ({
+  lat,
+  lon,
+}: {
+  name: string;
+  lat: number;
+  lon: number;
+}) => {
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000';
+  const response = await fetch(`${baseUrl}/api/currentWeather`, {
+    method: 'POST',
+    body: JSON.stringify({
+      longitude: lon,
+      latitude: lat,
+      fetchParams,
+    }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    // Ensure fetch is made server-side by disabling caching
+    cache: 'no-store',
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch weather data');
+  }
+
+  return response.json();
+};
+
 const Home = async () => {
-  const fetchWeatherData = async (city: {
-    name?: string;
-    lat: number | undefined;
-    lon: number | undefined;
-  }) => {
-    try {
-      const response = await fetch('/api/currentWeather', {
-        method: 'POST',
-        body: JSON.stringify({
-          longitude: city.lon,
-          latitude: city.lat,
-          fetchParams: fetchparams,
-        }),
-        headers: { 'Content-Type': 'application/json' },
-      });
-
-      if (!response.ok) {
-        throw new Error(`Error fetching data for ${city.name}`);
-      }
-
-      return response.json();
-    } catch (error) {
-      console.error("Error fetching popular cities' weather:", error);
-      return [];
-    }
-  };
-
   const promises = POPULAR_CITIES.map(async (city) => {
     const response = await fetchWeatherData(city);
 
@@ -64,6 +67,8 @@ const Home = async () => {
   });
 
   const results = await Promise.all(promises);
+
+  
 
   return <ClientComponent data={results} />;
 };

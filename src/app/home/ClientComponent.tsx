@@ -4,7 +4,6 @@ import { useState } from 'react';
 
 import Image from 'next/image';
 import { weatherCodeToIcon } from '../utils';
-import HourlyForecast from '../HourlyForecast';
 
 import { useRouter } from 'next/navigation';
 
@@ -71,13 +70,6 @@ const ClientComponent: React.FC<ClientComponentProps> = ({ data }) => {
           />
         </div>
 
-        {/* Today Weather Section */}
-        <section className="mb-6">
-          {/* Hourly Weather Forecast */}
-          <div className="flex flex-wrap gap-4 w-full">
-            <HourlyForecast />
-          </div>
-        </section>
 
         {/* Weather Map */}
         <section className="mb-6">
