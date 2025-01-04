@@ -120,16 +120,26 @@ const fetchHourlyForecast = async ({
   }
 };
 
-const WeatherDetailPage = async ({ params }: { params: { id: string } }) => {
-  const pageParams = await params;
-  const city = POPULAR_CITIES.find((city) => city.name === pageParams.id);
+const WeatherDetailPage = async ({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) => {
+  const { id } = await params;
+  const city = POPULAR_CITIES.find((city) => city.name === id);
 
   if (!city) return;
 
   const hourlyData = await fetchHourlyForecast(city);
   const weatherData = await fetchWeatherData(city);
-  
-  return <ClientComponent weatherData={weatherData} hourlyData={hourlyData} city={city}/>;
+
+  return (
+    <ClientComponent
+      weatherData={weatherData}
+      hourlyData={hourlyData}
+      city={city}
+    />
+  );
 };
 
 export default WeatherDetailPage;
