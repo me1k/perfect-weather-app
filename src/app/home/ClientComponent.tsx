@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 interface WeatherData {
   name: string;
   temperature: number;
+  apparentTemperature: number;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   weatherCode: any;
 }
@@ -20,12 +21,11 @@ interface ClientComponentProps {
 
 const ClientComponent: React.FC<ClientComponentProps> = ({ data }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [darkMode] = useState(false);
   const { push } = useRouter();
 
   return (
-    <div className={`${!darkMode ? 'dark' : ''}`}>
-      <div className="min-h-screen bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-100 p-6">
+    <div className={`${!false ? 'dark' : ''}`}>
+      <div className="flex gap-6 flex-col items-center p-8 max-w-6xl mx-auto bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md min-h-screen">
         <header className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold center">Weather App</h1>
         </header>
@@ -70,6 +70,45 @@ const ClientComponent: React.FC<ClientComponentProps> = ({ data }) => {
           />
         </div>
 
+        {/* Current Weather */}
+        <section className="mb-6 w-full space-y-4">
+          <h2 className="text-xl font-semibold mb-4">Berlin</h2>
+          {data.map((c, i) => {
+            if (c.name !== 'Berlin') return null;
+            return (
+              <div
+                key={i}
+                className="flex items-center justify-between bg-gray-300 dark:bg-gray-600 p-4 rounded shadow w-full">
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
+                  {new Date().toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                  })}
+                </p>
+
+                <Image
+                  src={`http://openweathermap.org/img/wn/${
+                    weatherCodeToIcon[c?.weatherCode]
+                  }@2x.png`}
+                  alt="Weather Icon"
+                  className="w-10 h-10"
+                  width={100}
+                  height={100}
+                />
+                <p className="text-lg font-bold">
+                  {Math.round(c?.temperature)}°C
+                </p>
+                <div className="flex flex-col items-center">
+                  <p className="text-lg">
+                    {Math.round(c?.apparentTemperature)}°C
+                  </p>
+                  <p className="text-sm">Apparent Temperature</p>
+                </div>
+              </div>
+            );
+          })}
+        </section>
 
         {/* Weather Map */}
         <section className="mb-6">

@@ -5,13 +5,11 @@ import Image from 'next/image';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ClientComponent = ({ weatherData, hourlyData, city }: any) => {
-  console.log({ weatherData, hourlyData });
   const iconCode = weatherCodeToIcon[weatherData?.weatherCode] || '01d';
   const iconUrl = `http://openweathermap.org/img/wn/${iconCode}@2x.png`;
 
   return (
     <div className={`${!false ? 'dark' : ''}`}>
-      return (
       <div className="flex gap-6 flex-col items-center p-8 max-w-6xl mx-auto bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md min-h-screen">
         {/* Header */}
         <div className="text-center">

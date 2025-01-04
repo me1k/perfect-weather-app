@@ -60,6 +60,7 @@ const Home = async () => {
     return {
       name: city.name,
       temperature: response.current.temperature2m,
+      apparentTemperature: response.current.apparentTemperature,
       weatherCode: response.current.weatherCode,
       lat: city.lat,
       lon: city.lon,
