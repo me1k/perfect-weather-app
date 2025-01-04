@@ -16,9 +16,9 @@ const ClientComponent = ({ weatherData, hourlyData, city }: any) => {
           <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-4">
             {city?.name}
           </h1>
-          <p className="text-gray-600 dark:text-gray-400">
+          {/* <p className="text-gray-600 dark:text-gray-400">
             Updated at: {new Date(weatherData?.current?.time).toLocaleString()}
-          </p>
+          </p> */}
         </div>
         Weather Overview
         <div className="flex items-center gap-6 my-6">
@@ -31,11 +31,10 @@ const ClientComponent = ({ weatherData, hourlyData, city }: any) => {
           />
           <div>
             <p className="text-4xl font-extrabold text-gray-900 dark:text-gray-50">
-              {Math.round(weatherData?.current?.temperature2m)}°C
+              {weatherData?.current?.temperature2m}°C
             </p>
             <p className="text-lg text-gray-600 dark:text-gray-400">
-              Apparent Temperature:{' '}
-              {Math.round(weatherData?.current?.apparentTemperature)}
+              Apparent Temperature: {weatherData?.current?.apparentTemperature}
               °C
             </p>
             <p
@@ -54,11 +53,11 @@ const ClientComponent = ({ weatherData, hourlyData, city }: any) => {
         <div className="flex flex-col gap-4 w-full">
           <div className="flex items-center justify-between bg-gray-300 dark:bg-gray-600 p-4 rounded shadow w-full">
             <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
-              {new Date().toLocaleTimeString([], {
+              {/* {new Date().toLocaleTimeString([], {
                 hour: '2-digit',
                 minute: '2-digit',
                 second: '2-digit',
-              })}
+              })} */}
             </p>
             <Image
               src={`http://openweathermap.org/img/wn/${
@@ -70,11 +69,11 @@ const ClientComponent = ({ weatherData, hourlyData, city }: any) => {
               height={100}
             />
             <p className="text-lg font-bold">
-              {Math.round(weatherData?.current?.temperature2m)}°C
+              {weatherData?.current?.temperature2m}°C
             </p>
             <div className="flex flex-col items-center">
               <p className="text-lg">
-                {Math.round(weatherData?.current?.apparentTemperature)}°C
+                {weatherData?.current?.apparentTemperature}°C
               </p>
               <p className="text-sm">Apparent Temperature</p>
             </div>
@@ -87,7 +86,7 @@ const ClientComponent = ({ weatherData, hourlyData, city }: any) => {
                 key={index}
                 className="flex items-center justify-between bg-gray-300 dark:bg-gray-600 p-4 rounded shadow w-full">
                 <p className="text-sm font-medium text-gray-600 dark:text-gray-300">
-                  {new Date(hour.time).toLocaleTimeString()}
+                  {/* {new Date(hour.time).toLocaleTimeString()} */}
                 </p>
                 <Image
                   src={`http://openweathermap.org/img/wn/${hour.weatherCode}@2x.png`}
@@ -96,13 +95,9 @@ const ClientComponent = ({ weatherData, hourlyData, city }: any) => {
                   width={100}
                   height={100}
                 />
-                <p className="text-lg font-bold">
-                  {Math.round(hour.temperature)}°C
-                </p>
+                <p className="text-lg font-bold">{hour.temperature}°C</p>
                 <div className="flex flex-col items-center">
-                  <p className="text-lg">
-                    {Math.round(hour.apparentTemperature)}°C
-                  </p>
+                  <p className="text-lg">{hour.apparentTemperature}°C</p>
                   <p className="text-sm">Apparent Temperature</p>
                 </div>
               </div>
@@ -152,31 +147,31 @@ const ClientComponent = ({ weatherData, hourlyData, city }: any) => {
           <div className="bg-white dark:bg-gray-700 rounded-lg p-4 shadow">
             <p className="text-sm font-semibold">Pressure (MSL)</p>
             <p className="text-xl font-bold">
-              {Math.round(weatherData?.current?.pressureMsl)} hPa
+              {weatherData?.current?.pressureMsl} hPa
             </p>
           </div>
           <div className="bg-white dark:bg-gray-700 rounded-lg p-4 shadow">
             <p className="text-sm font-semibold">Surface Pressure</p>
             <p className="text-xl font-bold">
-              {Math.round(weatherData?.current?.surfacePressure)} hPa
+              {weatherData?.current?.surfacePressure} hPa
             </p>
           </div>
           <div className="bg-white dark:bg-gray-700 rounded-lg p-4 shadow">
             <p className="text-sm font-semibold">Wind Speed</p>
             <p className="text-xl font-bold">
-              {Math.round(weatherData?.current?.windSpeed10m)} km/h
+              {weatherData?.current?.windSpeed10m} km/h
             </p>
           </div>
           <div className="bg-white dark:bg-gray-700 rounded-lg p-4 shadow">
             <p className="text-sm font-semibold">Wind Direction</p>
             <p className="text-xl font-bold">
-              {Math.round(weatherData?.current?.windDirection10m)}°
+              {weatherData?.current?.windDirection10m}°
             </p>
           </div>
           <div className="bg-white dark:bg-gray-700 rounded-lg p-4 shadow">
             <p className="text-sm font-semibold">Wind Gusts</p>
             <p className="text-xl font-bold">
-              {Math.round(weatherData?.current?.windGusts10m)} km/h
+              {weatherData?.current?.windGusts10m} km/h
             </p>
           </div>
         </div>
@@ -187,7 +182,6 @@ const ClientComponent = ({ weatherData, hourlyData, city }: any) => {
           Go Back
         </button>
       </div>
-      );
     </div>
   );
 };

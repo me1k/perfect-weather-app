@@ -56,7 +56,7 @@ const fetchWeatherData = async ({
 const Home = async () => {
   const promises = POPULAR_CITIES.map(async (city) => {
     const response = await fetchWeatherData(city);
-
+    console.log({ response });
     return {
       name: city.name,
       temperature: response.current.temperature2m,
@@ -68,8 +68,6 @@ const Home = async () => {
   });
 
   const results = await Promise.all(promises);
-
-  
 
   return <ClientComponent data={results} />;
 };

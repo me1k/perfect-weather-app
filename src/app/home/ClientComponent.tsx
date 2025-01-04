@@ -51,7 +51,7 @@ const ClientComponent: React.FC<ClientComponentProps> = ({ data }) => {
                     />
                     <span>{city.name}</span>
                     <span className="text-xs font-bold text-gray-800 dark:text-gray-300">
-                      {Math.round(city.temperature)}°C
+                      {city.temperature}°C
                     </span>
                   </div>
                 );
@@ -97,11 +97,11 @@ const ClientComponent: React.FC<ClientComponentProps> = ({ data }) => {
                   height={100}
                 />
                 <p className="text-lg font-bold">
-                  {Math.round(c?.temperature)}°C
+                  {c?.temperature}°C
                 </p>
                 <div className="flex flex-col items-center">
                   <p className="text-lg">
-                    {Math.round(c?.apparentTemperature)}°C
+                    {c?.apparentTemperature}°C
                   </p>
                   <p className="text-sm">Apparent Temperature</p>
                 </div>
